@@ -6,8 +6,10 @@ import { writeImageToDisk } from "../helpers/image.helper";
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 dotenv.config();
+import { validateUser } from "../Schemas/users.schema";
 
 import mongoose from "mongoose";
+// import userValidation from "../Schemas/users.schema";
 // import { generateAuthToken } from 'auth';
 
 mongoose.set("debug", true);
@@ -158,64 +160,15 @@ UserRouter.delete("/:id", async (req, res) => {
     res.status(400).send(message);
   }
 
-  function validateUser(User: any) {
-    const schema = Joi.object({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      email: Joi.string().required(),
-      profilePic: Joi.string().required(),
-      password: Joi.string()
-        .required()
-        .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-    });
-    return User;
-  }
-
-
-  function validateBook(Book: any) {
-    const schema = Joi.object({
-      title: Joi.string().min(5).max(50).required(),
-      author: Joi.string().required(),
-      genre: Joi.string().required(),
-      image: Joi.string().required(),
-    });
-    return Book;
-  }
-
-  function validateAuthor(Author: any) {
-    const schema = Joi.object({
-      name: Joi.string().min(5).max(50).required(),
-      image: Joi.string().required(),
-    });
-    return Author;
-  }
-
-
-  function validateBookEdit(Book: any) {
-    const schema = Joi.object({
-      title: Joi.string().min(5).max(50), 
-      author: Joi.string(),
-      genre: Joi.string(),
-      image: Joi.string(),
-  });
-    return Book;
-  }
-
-  function validateAuthorEdit(Author: any) {
-    const schema = Joi.object({
-      name: Joi.string().min(5).max(50),
-      image: Joi.string(),
-    });
-    return Author;
-  }
-
 });
 
-// module.exports = 
-// {
-//   validateUser,
-//   validateBook,
-//   validateAuthor,
-//   validateBookEdit,
-//   validateAuthorEdit,
-// }
+  
+
+
+
+
+
+ 
+
+
+

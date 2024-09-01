@@ -54,7 +54,6 @@ export class CategoryListComponent {
   }
 
   newFormData(){
-    console.log("new form data",this.formData);
     
   
     this.formData = new FormData();

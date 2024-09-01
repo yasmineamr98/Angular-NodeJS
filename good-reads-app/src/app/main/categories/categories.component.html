@@ -9,9 +9,10 @@
         <div
           class="category-card"
           [ngStyle]="{ 'background-color': category.color }"
+          [routerLink]="['/categories/' + category.name]"
         >
           <i [class]="category.icon"></i>
-          <h4  [routerLink]="['/categories/' + category.name]" >{{ category.name }}</h4>
+          <h4>{{ category.name }}</h4>
         </div>
       </div>
     </div>

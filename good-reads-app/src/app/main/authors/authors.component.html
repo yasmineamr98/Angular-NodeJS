@@ -4,39 +4,40 @@
   <div class="row">
     <div
       class="col-md-3"
-      *ngFor="let Author of AuthorsList | paginate: { itemsPerPage:this.itemsPerPage, currentPage: this.currentPage }">
+      *ngFor="let Author of AuthorsList | paginate: { itemsPerPage: this.itemsPerPage, currentPage: this.currentPage }">
       <div class="author">
         <img 
-          src={{Author.Photo}} 
-          alt="author 4" 
+          src="{{Author.Photo}}" 
+          alt="author photo" 
           class="author-image"
           (click)="Rrouter.navigate(['/authors', Author._id])"
           style="cursor: pointer;"
         />
         <h2 class="author-title">
-          <a  (click)="Rrouter.navigate(['/authors', Author._id])" >{{Author.FirstName}}  {{Author.LastName}}</a>
+          <a (click)="Rrouter.navigate(['/authors', Author._id])">
+            {{Author.FirstName}}  {{Author.LastName}}
+          </a>
         </h2>
       </div>
     </div>
   </div>
 
+  <!-- Pagination Section -->
   <div class="row">
     <div class="col-md-12">
       <ul class="pagination" style="display: inline-flex">
         <li class="mr-1 page-item">
-          <button  class="page-link" (click)="previousPage()" [disabled]="this.currentPage === 1"
-            ><i class="fa-solid fa-circle-arrow-left"></i
-          ></button>
+          <button class="page-link" (click)="previousPage()" [disabled]="this.currentPage === 1">
+            <i class="fa-solid fa-circle-arrow-left"></i>
+          </button>
         </li>
-        <!-- Add class active to the current page -->
-        <li *ngFor="let i of [].constructor(this.totalPages); let index = index" class="page-item" [ngClass]="{ 'active': index + 1 === currentPage }">
-          <button  (click)="ToPage(index+1)" class="m-1 page-link" >{{index+1}}</button>
+        <li *ngFor="let i of [].constructor(this.totalPages); let index = index" class="page-item" [ngClass]="{ 'active': index + 1 === this.currentPage }">
+          <button (click)="ToPage(index + 1)" class="m-1 page-link">{{index + 1}}</button>
         </li>
-
         <li class="page-item">
-          <button  (click)="nextPage()" [disabled]="this.currentPage === this.totalPages" class="page-link" 
-            ><i class="fa-solid fa-circle-arrow-right"></i
-          ></button>
+          <button (click)="nextPage()" [disabled]="this.currentPage === this.totalPages" class="page-link">
+            <i class="fa-solid fa-circle-arrow-right"></i>
+          </button>
         </li>
       </ul>
     </div>

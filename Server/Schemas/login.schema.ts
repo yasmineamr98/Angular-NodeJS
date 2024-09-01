@@ -2,6 +2,9 @@ const express = require("express");
 const faker = require("faker");
 const router = express.Router();
 
+const Joi = require("joi");
+const jwt = require("jsonwebtoken");
+
 router.post("/reset-password", (req, res) => {
   const { email } = req.body;
 
@@ -15,3 +18,4 @@ router.post("/reset-password", (req, res) => {
 });
 
 module.exports = router;
+

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-const { MongooseFindByReference } = require('mongoose-find-by-reference');
+
 const reviewsSchema = new mongoose.Schema({
 
   Title: {
@@ -14,12 +14,12 @@ const reviewsSchema = new mongoose.Schema({
     type: Number,
     required: true,},
 
-    User: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  User: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  UserImage: { type: String },
  
 
 
 });
-reviewsSchema.plugin(MongooseFindByReference);
 const ReviewModel = mongoose.model('Review', reviewsSchema);
 export {
     ReviewModel,

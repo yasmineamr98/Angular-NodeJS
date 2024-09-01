@@ -7,6 +7,9 @@ import * as fs from "fs";
 import * as dotenv from "dotenv";
 import * as mongoose from "mongoose";
 import path from "path";
+import {validateAuthor} from "../Schemas/authors.schema"
+import {validateAuthorEdit} from "../Schemas/authors.schema"
+
 
 
 
@@ -196,3 +199,6 @@ AuthorRouter.delete("/:id", async (req, res) => {
     res.status(400).send(message);
   }
 });
+
+
+

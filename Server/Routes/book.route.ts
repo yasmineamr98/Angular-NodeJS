@@ -8,6 +8,10 @@ import { Author as AuthorModel } from "../Schemas/authors.schema";
 import { Category as CategoryModel } from "../Schemas/categories.schema";
 import { ObjectId } from "mongodb";
 import path from "path";
+import {validateBook} from "../Schemas/books.schema";
+import {validateBookEdit} from "../Schemas/books.schema";
+
+
 
 
 
@@ -89,14 +93,24 @@ BookRouter.get("/:id", async (req, res) => {
   try {
     const id = req?.params?.id;
     const query = { _id: new ObjectId(id) };
-    const Book = await BookModel?.findOne(query).populate("author").exec();
-
+    const Book = await BookModel?.findOne(query).populate("author").populate({
+      path: 'reviews',
+      populate: {
+        path: 'User'
+      }
+    }).exec();
+    console.log("Book --------------------------------------------------",Book);
+    Book?.reviews?.forEach((review: any) => {
+      review.User.password = undefined;
+      review.User.email = undefined;
+    })
     if (Book) {
       res.status(200).send(Book);
     } else {
       res.status(404).send(`Failed to find an Book: ID ${id}`);
     }
   } catch (error) {
+    console.error(error);
     res.status(404).send(`Failed to find an Book: ID ${req?.params?.id}`);
   }
 });

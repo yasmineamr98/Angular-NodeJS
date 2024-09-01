@@ -38,29 +38,25 @@
       <h2>Reviews</h2>
 
       <div class="reviews">
-        <div class="review">
+
+        <div class="review" *ngFor="let review of reviews">
           <div class="review-header">
-            <div class="review-profile-picture">
+            <div class="review-profile-picture" style="width: 50px;">
               <img
-                src="https://via.placeholder.com/50"
+                src='{{review.User?.profilePic??""}}'
                 alt="Profile Picture"
                 class="img-fluid rounded-circle"
               />
             </div>
-            <h3 class="review-username">John Doe</h3>
+            <h3 class="review-username"> {{review.User?.password}} {{review.User?.firstName??""}} {{review.User?.lastName??""}}</h3>
           </div>
           <div class="review-content">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit
-              amet nulla auctor, vestibulum magna sed, convallis ex.
+              {{review.content}}
             </p>
-            <p>Rating: <span>5</span>/5</p>
+            <p>Rating: <span>{{review.Rating}}</span>/5</p>
             <div class="rating-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
+              <i class="fas fa-star" *ngFor="let star of [].constructor(review.Rating);"></i>
             </div>
           </div>
         </div>
@@ -92,7 +88,7 @@
         </div>
         <div class="review-form">
           <h3>Leave a Review</h3>
-          <form>
+          <form  >
             <div class="form-group">
               <label for="review-text">Your Review:</label>
               <textarea id="review-text" class="form-control"></textarea>
@@ -108,7 +104,7 @@
                 </i>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary">Submit Review</button>
+            <button type="button" (click)="submitReview()" class="btn btn-primary">Submit Review</button>
           </form>
         </div>
       </div>

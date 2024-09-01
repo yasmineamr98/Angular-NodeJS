@@ -1,6 +1,8 @@
 import * as express from "express";
 import { ObjectId } from "mongodb";
 import { ReviewModel } from "../Schemas/reviews.schema"
+import { Book as BookModel } from "../Schemas/books.schema"
+import mongoose from "mongoose";
 
 export const ReviewRouter = express.Router();
 ReviewRouter.use(express.json());
@@ -34,28 +36,52 @@ ReviewRouter.get("/:id", async (req, res) => {
   }
 });
 
-ReviewRouter.post("/", async (req, res) => {
+ReviewRouter.post("/:id", async (req, res) => {
   try {
-    const { Title, content, Rating, User }  = req.body;
-    console.log(req);
+    const { Title, content, Rating, User } = req.body;
+    const id = req?.params?.id;
+    console.log('Request:', req.body);
+
+    // Validate id
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid ID format');
+    }
+
     const Review = new ReviewModel({ Title, content, Rating, User });
     const result = await Review.save();
 
-    if (result) {
-      console.log(`Created a new Review: ID ${result.id}.`);
-      
-      res
-        .status(201)
-        .send({ some: `Created a new Review: ID ${result.id}.` });
+    // Log the saved review ID
+    console.log(`Created a new Review: ID ${result.id}.`);
+
+    // Validate if book exists before updating
+    const bookExists = await BookModel.exists({ _id: id });
+    if (!bookExists) {
+      throw new Error(`Book with ID ${id} does not exist`);
+    }
+
+    // Log the schema and connection details
+    // console.log('BookModel Schema:', BookModel.schema);
+    // console.log('Database Connection:', mongoose.connection.readyState);
+
+    // Ensure the Reviews field is initialized as an array if it's null or undefined
+    const result3=  await BookModel.updateOne({ _id: new ObjectId(id), reviews: { $exists: false } }, { $set: { reviews: [] } });
+    console.log(`Update Result: ${JSON.stringify(result3)}`);
+    
+    // Add the id of the review to the book
+    const query = { _id: new ObjectId(id) };
+    const update = { $push: { reviews: result._id } };
+    const result2 = await BookModel.updateOne(query, update);
+
+    console.log(`Update Result: ${JSON.stringify(result2)}`);
+
+    if (result2.acknowledged) {
+      res.status(201).send({ message: `Created a new Review: ID ${result.id}.` });
     } else {
-      console.log("Failed to create a new Review.");
-      res.status(500).send("Failed to create a new Review.");
+      throw new Error('Failed to update the book with the new review ID');
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(400)
-      .send(error instanceof Error ? error.message : "Unknown error");
+    res.status(400).send(error instanceof Error ? error.message : "Unknown error");
   }
 });
 

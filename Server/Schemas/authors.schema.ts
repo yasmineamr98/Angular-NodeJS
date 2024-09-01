@@ -1,4 +1,6 @@
 import * as mongoose from "mongoose";
+const Joi = require("joi");
+const jwt = require("jsonwebtoken");
 const { MongooseFindByReference } = require("mongoose-find-by-reference");
 const { dateFormat } = require("../helpers/dateNotTime");
 const authorsSchema = new mongoose.Schema({
@@ -25,3 +27,28 @@ const authorsSchema = new mongoose.Schema({
 
 const AuthorModel = mongoose.model("Author", authorsSchema);
 export { AuthorModel as Author, authorsSchema };
+
+
+
+function validateAuthor(Author: any) {
+  const schema = Joi.object({
+    name: Joi.string().min(5).max(50).required(),
+    image: Joi.string().required(),
+  });
+  return Author;
+}
+
+
+function validateAuthorEdit(Author: any) {
+  const schema = Joi.object({
+    name: Joi.string().min(5).max(50),
+    image: Joi.string(),
+  });
+  return Author;
+}
+
+
+ export{
+  validateAuthor,
+  validateAuthorEdit,
+ }
