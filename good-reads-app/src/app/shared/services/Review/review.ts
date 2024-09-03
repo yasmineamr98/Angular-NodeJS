@@ -8,5 +8,5 @@ export interface Review {
   content: string;
   Rating: Number;
   UserImage: string | null;
-
+  UserId: mongodb.ObjectId | null;
 }

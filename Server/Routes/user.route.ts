@@ -3,10 +3,12 @@ import * as dotenv from "dotenv";
 import { ObjectId, UUID } from "mongodb";
 import { User as MUser } from "../Schemas/users.schema";
 import { writeImageToDisk } from "../helpers/image.helper";
-const Joi = require("joi");
+import * as bcrypt from "bcryptjs";
+
+import * as Joi from "joi";
 const jwt = require("jsonwebtoken");
 dotenv.config();
-import { validateUser } from "../Schemas/users.schema";
+import { validateUserRegister,validateUserLogin } from "../Schemas/users.schema";
 
 import mongoose from "mongoose";
 // import userValidation from "../Schemas/users.schema";
@@ -22,6 +24,12 @@ UserRouter.post("/login/", async (_req, res) => {
   try {
     const { email, password } = _req.body;
     const User = await MUser.findOne({ email: email, password: password });
+
+    const { error } = validateUserLogin({ email, password });
+    if (error) {
+      
+      return res.status(406).send(error.message);
+    }
 
     // const User = await MUser.findOne({});
     if (User !== null) {
@@ -94,14 +102,26 @@ UserRouter.get("/:id", async (req, res) => {
 UserRouter.post("/", async (req, res) => {
   try {
     const { firstName, lastName, email, password, profilePic } = req.body;
-    const user = new MUser({
+    
+    let user = new MUser({
       firstName,
       lastName,
       email,
       password,
       profilePic,
-    });
+    }); 
+    
+    console.log(user.password);
+    
+    const { error } = validateUserRegister(user);
+    if (error) {
+      console.log(error);
+      return res.status(406).send(error.message);
 
+    }
+    const salt  = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    console.log(user);
     user.profilePic = await writeImageToDisk(profilePic, user.id);
 
     const result = await user.save();

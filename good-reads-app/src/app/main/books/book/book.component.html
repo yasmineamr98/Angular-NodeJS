@@ -41,7 +41,7 @@
 
         <div class="review" *ngFor="let review of reviews">
           <div class="review-header">
-            <div class="review-profile-picture" style="width: 50px;">
+            <div class="review-profile-picture" >
               <img
                 src='{{review.User?.profilePic??""}}'
                 alt="Profile Picture"
@@ -91,12 +91,12 @@
           <form  >
             <div class="form-group">
               <label for="review-text">Your Review:</label>
-              <textarea id="review-text" class="form-control"></textarea>
+              <textarea [(ngModel)]="review.content"  id="review-text" class="form-control"></textarea>
             </div>
             <div class="form-group">
-              <label for="review-rating">Rating:</label>
+              <label  for="review-rating">Rating:</label>
               <div class="rating-stars" id="review-rating">
-                <i class="fas fa-star" *ngFor="let star of stars; let i = index" 
+                <i [(ngModel)]="review.Rating" class="fas fa-star" *ngFor="let star of stars; let i = index" 
                    (mouseover)="highlightStars(i)" 
                    (mouseleave)="resetStars()" 
                    (click)="rateBook(i + 1)" 

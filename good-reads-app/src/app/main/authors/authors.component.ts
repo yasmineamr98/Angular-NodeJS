@@ -15,6 +15,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
   styleUrl: './authors.component.css',
 })
 export class AuthorsComponent {
+[x: string]: any;
 ToPage(arg0: number) {
   this.currentPage = arg0;
 }

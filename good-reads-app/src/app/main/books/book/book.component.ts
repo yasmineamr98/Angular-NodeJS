@@ -5,11 +5,13 @@ import { BookService } from '../../../shared/services/Book/book.service';
 import { Book } from '../../../shared/services/Book/Book';
 import { Review } from '../../../shared/services/Review/review';
 import { ReviewService } from '../../../shared/services/Review/review.service';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
+
 
 @Component({
   selector: 'app-book',
   standalone: true,
-  imports: [CommonModule], // Add CommonModule to the imports array
+  imports: [CommonModule,FormsModule ], // Add CommonModule to the imports array
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.css'],
 })
@@ -32,6 +34,14 @@ export class BookComponent implements OnInit {
     categoryId: null,
   };
 reviews: Review[] = [];
+review: Review = {
+  Rating: 0,
+  content: '',
+  Title: '',
+  UserImage:null,
+  User: null,
+  UserId:null
+}
 
   constructor(private route: ActivatedRoute, protected bookService: BookService, protected ReviewService:ReviewService) {
     //get the id from urrl and set it to frrrom afterr  the /
@@ -63,13 +73,8 @@ reviews: Review[] = [];
     
     
     const userId= JSON.parse(sessionStorage.getItem('User')??'')._id ?? '';
-    const review = {
-      Title: 'Second test',
-      content: 'Second test',
-      Rating: 2,
-      User: userId
-    };
-    this.ReviewService.CreateReview(review, this.bookId).then((review: any) => {
+    this.review.UserId=userId;
+    this.ReviewService.CreateReview(this.review, this.bookId).then((review: any) => {
         this.reviews.push(review);
         console.log(review);
     });
