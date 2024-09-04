@@ -28,6 +28,7 @@ var usersSchema = new mongoose.Schema({
             },
             message: function (props) { return "".concat(props.value, " is not a valid email!"); },
         },
+        unique: true,
     },
     password: {
         type: String,
